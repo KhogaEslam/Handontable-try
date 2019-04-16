@@ -168,7 +168,7 @@ export const createCustomRenderer = (
   )
   for (let i = 0; i < size - 3; i++) {
     rendererFuncs.push({
-      renderer: customRenderer1
+      // renderer: customRenderer1
     })
   }
 

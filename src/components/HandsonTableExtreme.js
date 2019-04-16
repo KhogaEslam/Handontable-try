@@ -59,7 +59,9 @@ class HandsonTable extends React.Component {
           customRenderer,
           customRenderer1,
           sizeOfData
-        )
+        ),
+        manualColumnMove: true,
+        manualRowMove: true
       }
     }
 
