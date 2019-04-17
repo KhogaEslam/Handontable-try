@@ -57,14 +57,19 @@ class HandsonTable extends React.Component {
         rowHeaders: true,
         width: '100%',
         height: '900',
-        colWidths: '200',
-        colHeight: '200',
+        // colWidths: '200',
+        // colHeight: '200',
         licenseKey: 'non-commercial-and-evaluation',
         search: true,
         nestedHeaders: this.nestedHeaders,
-        columns: this.columns,
-        manualColumnMove: true,
-        manualRowMove: true
+        // columns: this.columns,
+        // manualColumnMove: true,
+        // manualRowMove: true,
+        mergeCells: [
+          { row: 1, col: 4, rowspan: 200, colspan: 3 },
+          { row: 250, col: 250, rowspan: 200, colspan: 3 },
+          { row: 500, col: 500, rowspan: 200, colspan: 3 }
+        ]
       }
     }
 
