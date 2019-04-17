@@ -124,13 +124,13 @@ class HandsonTable extends React.Component {
   }
 
   mergeData = (selected, target, type) => {
-    let numberOfColumns
+    let originalData
     let hotSettings
     let targetAfterSelectedCheck
 
     if (type === 'rows') {
       const numberOfMergedRows = selected.length
-      const originalData = this.state.hotSettings.data
+      originalData = this.state.hotSettings.data
       const deletedRows = originalData.splice(selected[0], numberOfMergedRows)
 
       let append = true
@@ -141,7 +141,7 @@ class HandsonTable extends React.Component {
         targetAfterSelectedCheck -= numberOfMergedRows
       }
 
-      numberOfColumns = originalData[targetAfterSelectedCheck].length
+      const numberOfColumns = originalData[targetAfterSelectedCheck].length
 
       for (let i = 0; i < numberOfColumns; i++) {
         let content = ' '
@@ -158,20 +158,53 @@ class HandsonTable extends React.Component {
           : content + originalData[targetAfterSelectedCheck][i]
       }
 
-      hotSettings = {
-        ...this.state.hotSettings,
-        data: originalData
-      }
-
       this.hotTableComponent.current.hotInstance.selectRows(
         targetAfterSelectedCheck
       )
     } else if (type === 'columns') {
+      const numberOfMergedColumns = selected.length
+      originalData = this.state.hotSettings.data
+
+      let numberOfRows = 0
+      const deletedColumns = originalData.map(function(val) {
+        numberOfRows += 1
+        return val.splice(selected[0], numberOfMergedColumns)
+      })
+
+      let append = true
+      targetAfterSelectedCheck = target
+
+      if (selected[0] < target) {
+        append = false
+        targetAfterSelectedCheck -= numberOfMergedColumns
+      }
+
+      for (let i = 0; i < numberOfRows; i++) {
+        let iterator = 0
+        let content = ' '
+
+        while (iterator < numberOfMergedColumns) {
+          content = `${content}${deletedColumns[i][iterator]} `
+
+          iterator += 1
+        }
+
+        originalData[i][targetAfterSelectedCheck] = append
+          ? originalData[i][targetAfterSelectedCheck] + content
+          : content + originalData[i][targetAfterSelectedCheck]
+      }
+
+      this.hotTableComponent.current.hotInstance.selectColumns(
+        targetAfterSelectedCheck
+      )
+    }
+
+    hotSettings = {
+      ...this.state.hotSettings,
+      data: originalData
     }
 
     this.hotTableComponent.current.hotInstance.updateSettings(hotSettings)
-
-    sizeOfData = numberOfColumns
   }
 
   beforeRowMoveCallback = (rows, target) => {
@@ -188,8 +221,8 @@ class HandsonTable extends React.Component {
   beforeColumnMoveCallback = (rows, target) => {
     console.log('beforeColumnMoveCallback', { rows })
     console.log('beforeColumnMoveCallback', { target })
-    // this.mergeData(rows, target, 'columns')
-    // return false
+    this.mergeData(rows, target, 'columns')
+    return false
   }
   afterColumnMoveCallback = (rows, target) => {
     console.log('afterColumnMoveCallback', { rows })
@@ -212,7 +245,8 @@ class HandsonTable extends React.Component {
       this.searchPlugin ||
       this.hotTableComponent.current.hotInstance.getPlugin('search')
 
-    // const queryResult = this.searchPlugin.query(e.target.value)
+    const queryResult = this.searchPlugin.query(e.target.value)
+    console.log(queryResult)
 
     this.hotTableComponent.current.hotInstance.render()
   }
