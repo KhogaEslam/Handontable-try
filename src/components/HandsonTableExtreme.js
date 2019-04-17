@@ -43,6 +43,13 @@ function customRenderer(instance, td, row, col, prop, value, cellProperties) {
 class HandsonTable extends React.Component {
   constructor(props) {
     super(props)
+    this.nestedHeaders = createHeaders(sizeOfData)
+    this.columns = createCustomRenderer(
+      customRenderer,
+      customRenderer1,
+      sizeOfData
+    )
+
     this.state = {
       hotSettings: {
         data: null,
@@ -50,16 +57,12 @@ class HandsonTable extends React.Component {
         rowHeaders: true,
         width: '100%',
         height: '900',
-        colWidths: '500',
-        colHeight: '500',
+        colWidths: '200',
+        colHeight: '200',
         licenseKey: 'non-commercial-and-evaluation',
         search: true,
-        nestedHeaders: createHeaders(sizeOfData),
-        columns: createCustomRenderer(
-          customRenderer,
-          customRenderer1,
-          sizeOfData
-        ),
+        nestedHeaders: this.nestedHeaders,
+        columns: this.columns,
         manualColumnMove: true,
         manualRowMove: true
       }
@@ -99,6 +102,98 @@ class HandsonTable extends React.Component {
             })
           })
       })
+  }
+
+  componentDidUpdate = () => {
+    this.hotTableComponent.current.hotInstance.addHook(
+      'beforeRowMove',
+      this.beforeRowMoveCallback
+    )
+    this.hotTableComponent.current.hotInstance.addHook(
+      'afterRowMove',
+      this.afterRowMoveCallback
+    )
+    this.hotTableComponent.current.hotInstance.addHook(
+      'beforeColumnMove',
+      this.beforeColumnMoveCallback
+    )
+    this.hotTableComponent.current.hotInstance.addHook(
+      'afterColumnMove',
+      this.afterColumnMoveCallback
+    )
+  }
+
+  mergeData = (selected, target, type) => {
+    let numberOfColumns
+    let hotSettings
+    let targetAfterSelectedCheck
+
+    if (type === 'rows') {
+      const numberOfMergedRows = selected.length
+      const originalData = this.state.hotSettings.data
+      const deletedRows = originalData.splice(selected[0], numberOfMergedRows)
+
+      let append = true
+      targetAfterSelectedCheck = target
+
+      if (selected[0] < target) {
+        append = false
+        targetAfterSelectedCheck -= numberOfMergedRows
+      }
+
+      numberOfColumns = originalData[targetAfterSelectedCheck].length
+
+      for (let i = 0; i < numberOfColumns; i++) {
+        let content = ' '
+
+        let iterator = 0
+        while (iterator < numberOfMergedRows) {
+          content = `${content}${deletedRows[iterator][i]} `
+
+          iterator += 1
+        }
+
+        originalData[targetAfterSelectedCheck][i] = append
+          ? originalData[targetAfterSelectedCheck][i] + content
+          : content + originalData[targetAfterSelectedCheck][i]
+      }
+
+      hotSettings = {
+        ...this.state.hotSettings,
+        data: originalData
+      }
+
+      this.hotTableComponent.current.hotInstance.selectRows(
+        targetAfterSelectedCheck
+      )
+    } else if (type === 'columns') {
+    }
+
+    this.hotTableComponent.current.hotInstance.updateSettings(hotSettings)
+
+    sizeOfData = numberOfColumns
+  }
+
+  beforeRowMoveCallback = (rows, target) => {
+    console.log('beforeRowMoveCallback', { rows })
+    console.log('beforeRowMoveCallback', { target })
+    this.mergeData(rows, target, 'rows')
+    return false
+  }
+  afterRowMoveCallback = (rows, target) => {
+    console.log('afterRowMoveCallback', { rows })
+    console.log('afterRowMoveCallback', { target })
+  }
+
+  beforeColumnMoveCallback = (rows, target) => {
+    console.log('beforeColumnMoveCallback', { rows })
+    console.log('beforeColumnMoveCallback', { target })
+    // this.mergeData(rows, target, 'columns')
+    // return false
+  }
+  afterColumnMoveCallback = (rows, target) => {
+    console.log('afterColumnMoveCallback', { rows })
+    console.log('afterColumnMoveCallback', { target })
   }
 
   handleChange = (setting, states) => {
