@@ -55,16 +55,37 @@ class HandsonTable extends React.Component {
         data: null,
         colHeaders: true,
         rowHeaders: true,
-        width: '100%',
-        height: '900',
+        // width: '100%',
+        // height: '900',
         // colWidths: '200',
         // colHeight: '200',
+        autoWrapRow: false,
+        autoWrapCol: false,
+        autoColumnSize: false,
+        contextMenu: true,
+        colWidths: 100,
         licenseKey: 'non-commercial-and-evaluation',
-        search: true,
-        nestedHeaders: this.nestedHeaders,
+        // search: true,
+        // nestedHeaders: this.nestedHeaders,
         // columns: this.columns,
         // manualColumnMove: true,
         // manualRowMove: true,
+        // renderer: function(
+        //   instance,
+        //   TD,
+        //   row,
+        //   col,
+        //   prop,
+        //   value,
+        //   cellProperties
+        // ) {
+        //   var z = 0
+        //   for (var i = 0; i < 50000; i++) {
+        //     z = z + Math.random()
+        //   }
+
+        //   TD.innerHTML = value + '(' + Math.min(z, 0) + ')'
+        // },
         mergeCells: [
           { row: 1, col: 4, rowspan: 200, colspan: 3 },
           { row: 250, col: 250, rowspan: 200, colspan: 3 },
