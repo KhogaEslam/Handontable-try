@@ -59,12 +59,12 @@ class HandsonTable extends React.Component {
         // height: '900',
         // colWidths: '200',
         // colHeight: '200',
-        autoWrapRow: false,
-        autoWrapCol: false,
-        autoColumnSize: false,
-        contextMenu: true,
-        colWidths: 100,
-        licenseKey: 'non-commercial-and-evaluation',
+        // autoWrapRow: false,
+        // autoWrapCol: false,
+        // autoColumnSize: true,
+        // contextMenu: true,
+        // colWidths: 100,
+        licenseKey: 'non-commercial-and-evaluation'
         // search: true,
         // nestedHeaders: this.nestedHeaders,
         // columns: this.columns,
@@ -86,11 +86,11 @@ class HandsonTable extends React.Component {
 
         //   TD.innerHTML = value + '(' + Math.min(z, 0) + ')'
         // },
-        mergeCells: [
-          { row: 1, col: 4, rowspan: 200, colspan: 3 },
-          { row: 250, col: 250, rowspan: 200, colspan: 3 },
-          { row: 500, col: 500, rowspan: 200, colspan: 3 }
-        ]
+        // mergeCells: [
+        //   { row: 1, col: 4, rowspan: 200, colspan: 3 },
+        //   { row: 250, col: 250, rowspan: 200, colspan: 3 },
+        //   { row: 500, col: 500, rowspan: 200, colspan: 3 }
+        // ]
       }
     }
 
@@ -120,10 +120,13 @@ class HandsonTable extends React.Component {
           })
           .catch(e => {
             sizeOfData = 1000
+            const pData = data(sizeOfData)
+            pData[100][100] =
+              '012345678901234567890123456789\n012345678901234567890123456789\n012345678901234567890123456789'
             this.setState({
               hotSettings: {
                 ...this.state.hotSettings,
-                data: data(sizeOfData)
+                data: pData
               }
             })
           })
