@@ -55,6 +55,8 @@ class HandsonTable extends React.Component {
         data: null,
         colHeaders: true,
         rowHeaders: true,
+        // fixedColumnsLeft: 3,
+        // fixedRowsTop: 3,
         // width: '100%',
         // height: '900',
         // colWidths: '200',
@@ -64,7 +66,6 @@ class HandsonTable extends React.Component {
         // autoColumnSize: true,
         // contextMenu: true,
         // colWidths: 100,
-        licenseKey: 'non-commercial-and-evaluation'
         // search: true,
         // nestedHeaders: this.nestedHeaders,
         // columns: this.columns,
@@ -90,7 +91,8 @@ class HandsonTable extends React.Component {
         //   { row: 1, col: 4, rowspan: 200, colspan: 3 },
         //   { row: 250, col: 250, rowspan: 200, colspan: 3 },
         //   { row: 500, col: 500, rowspan: 200, colspan: 3 }
-        // ]
+        // ],
+        licenseKey: 'non-commercial-and-evaluation'
       }
     }
 
